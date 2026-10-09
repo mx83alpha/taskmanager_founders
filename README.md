@@ -26,7 +26,7 @@ Diese erste Version ist eine persönliche Kampagne in einer privaten Site. Vor e
 
 ## Belohnungsfeedback
 
-Nach einem bestätigten Abschluss: kurzer synthetischer Ching-Sound, XP-Pop-up und Pixel-Partikel. Levelaufstiege bekommen einen zusätzlichen Synth-Akkord. Der Sound lässt sich oben abschalten; nur diese Gerätepräferenz wird im Browser gespeichert. Die Partikel respektieren `prefers-reduced-motion`. Audio wird beim Klick freigeschaltet und läuft ohne externe Dienste.
+Nach einem bestätigten Abschluss: kurzer metallischer Tsching-Sound mit tiefem Impuls, XP-Pop-up und Pixel-Partikel. Levelaufstiege bekommen einen längeren metallischen Nachklang. Der Sound lässt sich oben abschalten; nur diese Gerätepräferenz wird im Browser gespeichert. Die Partikel respektieren `prefers-reduced-motion`. Audio wird beim Klick freigeschaltet und läuft ohne externe Dienste.
 
 Die sechs Icons visualisieren Idee, Gespräch, Recherche, Angebot, Prototyp und Feedback. Neue Quests erhalten anhand des Titels oder Kapitels das passende Motiv aus diesem Set; es gibt keine kostenpflichtige Bildgenerierung bei jedem Anlegen.
 

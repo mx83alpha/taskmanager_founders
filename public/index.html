@@ -36,7 +36,28 @@ let audioContext,soundOn=true,rewardTimeout;try{soundOn=localStorage.getItem('fo
 const reducedMotion=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 function syncSoundButton(){$('soundtoggle').textContent=soundOn?'♫ SOUND AN':'♫ SOUND AUS';$('soundtoggle').setAttribute('aria-pressed',String(soundOn));$('soundtoggle').setAttribute('aria-label',soundOn?'Belohnungssound ausschalten':'Belohnungssound einschalten und testen')}
 function unlockAudio(){if(!soundOn)return;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioContext??=new Audio();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{})}catch{}}
-function ching(levelUp=false){if(!soundOn||!audioContext||audioContext.state!=='running')return;try{const t=audioContext.currentTime;const note=(frequency,start,duration,gain,type='sine')=>{const osc=audioContext.createOscillator(),amp=audioContext.createGain();osc.type=type;osc.frequency.setValueAtTime(frequency,t+start);osc.connect(amp);amp.connect(audioContext.destination);amp.gain.setValueAtTime(0,t+start);amp.gain.linearRampToValueAtTime(gain,t+start+.008);amp.gain.exponentialRampToValueAtTime(.0001,t+start+duration);osc.start(t+start);osc.stop(t+start+duration+.02)};note(1046.5,0,.55,.13);note(2093,0,.38,.045);note(3139.5,0,.22,.022);note(1568,.045,.38,.045);if(levelUp){[1318.5,1568,2093].forEach((f,i)=>note(f,.15+i*.1,.32,.07,'triangle'))}}catch{}}
+function ching(levelUp=false){
+  if(!soundOn||!audioContext||audioContext.state!=='running')return;
+  try{
+    const t=audioContext.currentTime;
+    const voice=(from,to,duration,gain,type='sine',delay=0)=>{
+      const osc=audioContext.createOscillator(),amp=audioContext.createGain();
+      osc.type=type;osc.frequency.setValueAtTime(from,t+delay);
+      osc.frequency.exponentialRampToValueAtTime(to,t+delay+duration*.65);
+      osc.connect(amp);amp.connect(audioContext.destination);
+      amp.gain.setValueAtTime(0,t+delay);
+      amp.gain.linearRampToValueAtTime(gain,t+delay+.002);
+      amp.gain.exponentialRampToValueAtTime(.0001,t+delay+duration);
+      osc.start(t+delay);osc.stop(t+delay+duration+.015);
+      osc.onended=()=>{osc.disconnect();amp.disconnect()};
+    };
+    // A fast sub impact plus inharmonic metal layers: no bell or ascending jingle.
+    voice(185,48,levelUp?.23:.16,.28,'sine');
+    voice(480,135,.09,.075,'triangle');
+    voice(1960,1090,levelUp?.31:.21,.028,'square',.006);
+    voice(2873,1710,levelUp?.38:.26,.05,'sine',.009);
+  }catch{}
+}
 $('soundtoggle').onclick=()=>{soundOn=!soundOn;try{localStorage.setItem('founder-arcade-sound',soundOn?'on':'off')}catch{}syncSoundButton();if(soundOn){unlockAudio();audioContext?.resume().then(()=>ching()).catch(()=>{})}else audioContext?.suspend().catch(()=>{})};syncSoundButton();
 function celebrate(q,levelUp,point){ching(levelUp);$('rewardlabel').textContent=levelUp?'LEVEL UP!':'QUEST COMPLETE';$('rewardxp').textContent='+'+q.xp+' XP';$('rewardcopy').textContent=levelUp?'Neues Level freigeschaltet. Weiter geht’s!':'Gespeichert. Dein Business wächst.';$('reward').classList.toggle('level-reward',levelUp);$('reward').hidden=false;clearTimeout(rewardTimeout);rewardTimeout=setTimeout(()=>$('reward').hidden=true,2600);if(levelUp){const stat=$('level').closest('.stat');stat.classList.remove('level-up');void stat.offsetWidth;stat.classList.add('level-up');setTimeout(()=>stat.classList.remove('level-up'),1500)}if(reducedMotion())return;const x=point?.x??window.innerWidth*.6,y=point?.y??window.innerHeight*.5;for(let i=0;i<28;i++){const p=document.createElement('span'),a=i/28*Math.PI*2,d=50+Math.random()*95;p.className='pixel-particle';p.style.left=x+'px';p.style.top=y+'px';p.style.background=p.style.color=['#3cefff','#ff42d7','#d7ff58'][i%3];p.style.setProperty('--dx',Math.cos(a)*d+'px');p.style.setProperty('--dy',(Math.sin(a)*d-40)+'px');$('particles').append(p);setTimeout(()=>p.remove(),900)}}
 

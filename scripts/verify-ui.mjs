@@ -10,7 +10,7 @@ class AudioContextMock{
   state='running';currentTime=0;destination={};
   resume(){this.state='running';return Promise.resolve()}
   suspend(){this.state='suspended';return Promise.resolve()}
-  createOscillator(){return{frequency:{setValueAtTime(){}},connect(){},start(){notes++},stop(){}}}
+  createOscillator(){return{frequency:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},start(){notes++},stop(){}}}
   createGain(){return{gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}}}
 }
 try{
