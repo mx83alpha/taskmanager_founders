@@ -35,3 +35,7 @@ Die sechs Icons visualisieren Idee, Gespräch, Recherche, Angebot, Prototyp und 
 `npm test` prüft Speicherung, idempotente Abschlüsse, XP, Wiederöffnen, die öffentliche Origin hinter dem Sites-Proxy, Ablehnung fremder Origins, Asset-Formate und 16×16-Auflösung. Ein DOM-Test prüft außerdem: kein Sound/keine Animation bei Fehlern, bestätigte Belohnungen, Stummschaltung, reduzierte Bewegung und Levelaufstieg. Die DOM-Tests ersetzen keine visuelle Prüfung in einem echten Browser.
 
 Die öffentliche Origin steht explizit in `src/config.js`. Ein Proxy darf seine interne Worker-URL verwenden; der Browser sendet weiter die öffentliche Origin. Beliebige Forwarded-Host-Header werden nicht als Vertrauensquelle verwendet.
+
+## Wiederherstellung bei Speicherfehlern
+
+Abschlüsse werden über `POST /api/quests/:id/status` mit dem gewünschten Zustand gespeichert. Der ältere PATCH-Endpunkt bleibt kompatibel. Bei vorübergehenden Transportfehlern prüft die Oberfläche zuerst den gespeicherten Zustand und versucht den Zugriff höchstens dreimal. Neue Quests verwenden eine eindeutige Anfrage-ID, damit eine wiederholte Anfrage keinen zweiten Datensatz erzeugt. Erfolgreiches Neuladen entfernt veraltete Fehlermeldungen; verbleibende HTTP-Fehler zeigen ihren Statuscode. Tests simulieren verlorene Antworten nach einem erfolgreichen Schreibzugriff und vorübergehende Gateway-Ausfälle.
